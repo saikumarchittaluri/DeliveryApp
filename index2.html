@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive Recipe Catalogue</title>
+  <!-- Add your CSS and JavaScript links here -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Interactive Recipe Catalogue</h1>
+    <input type="text" id="searchInput" placeholder="Search recipes...">
+    <div>
+      <button onclick="filterRecipes('all')">Show All</button>
+      <button onclick="filterRecipes('veg')">Show Only Veg</button>
+      <button onclick="filterRecipes('non-veg')">Show Only Non-Veg</button>
+    </div>
+    <div>
+      <label>
+        <input type="radio" name="ratingFilter" value="above-4.5" onclick="filterByRating('above-4.5')">
+        Rating Above 4.5
+      </label>
+      <label>
+        <input type="radio" name="ratingFilter" value="above-4.5" onclick="filterByRating('above-4.5')">
+        Rating Above 4.5
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <div class="recipe-container" id="recipeContainer">
+      <!-- Dynamically generated recipe cards will go here -->
+    </div>
+  </main>
+
+  <!-- Your JavaScript code will go here -->
+  <script>
+    // Sample JSON data (you can replace it with your actual data)
+    const recipes = [
+      {
+        "name": "Veggie Delight",
+        // ... other properties
+      },
+      // ... more recipes
+    ];
+
+    // Function to create recipe cards
+    function createRecipeCard(recipe) {
+      const card = document.createElement("div");
+      card.className = "recipe-card";
+      card.innerHTML = `
+        <img src="${recipe.imageSrc}" alt="${recipe.name}">
+        <h2>${recipe.name}</h2>
+        <p>Type: ${recipe.type}</p>
+        <p>Time: ${recipe.time}</p>
+        <p>Rating: ${recipe.rating}</p>
+        <button onclick="toggleLike(${recipe.name})">Like</button>
+      `;
+      return card;
+    }
+
+    // Function to display all recipes
+    function displayAllRecipes() {
+      const recipeContainer = document.getElementById("recipeContainer");
+      recipeContainer.innerHTML = "";
+      recipes.forEach(recipe => {
+        const card = createRecipeCard(recipe);
+        recipeContainer.appendChild(card);
+      });
+    }
+
+    // Function to filter recipes by name
+    function filterRecipesByName(searchQuery) {
+      const filteredRecipes = recipes.filter(recipe =>
+        recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      const recipeContainer = document.getElementById("recipeContainer");
+      recipeContainer.innerHTML = "";
+      filteredRecipes.forEach(recipe => {
+        const card = createRecipeCard(recipe);
+        recipeContainer.appendChild(card);
+      });
+    }
+
+    // Function to toggle recipe type (veg, non-veg)
+    function filterRecipes(type) {
+      if (type === "all") {
+        displayAllRecipes();
+      } else {
+        const filteredRecipes = recipes.filter(recipe => recipe.type === type);
+        const recipeContainer = document.getElementById("recipeContainer");
+        recipeContainer.innerHTML = "";
+        filteredRecipes.forEach(recipe => {
+          const card = createRecipeCard(recipe);
+          recipeContainer.appendChild(card);
+        });
+      }
+    }
+
+    // Function to filter recipes by rating
+    function filterByRating(ratingFilter) {
+      const filteredRecipes = recipes.filter(recipe => {
+        if (ratingFilter === "above-4.5") {
+          return recipe.rating > 4.5;
+        } else if (ratingFilter === "below-4.0") {
+          return recipe.rating < 4.0;
+        }
+      });
+      const recipeContainer = document.getElementById("recipeContainer");
+      recipeContainer.innerHTML = "";
+      filteredRecipes.forEach(recipe => {
+        const card = createRecipeCard(recipe);
+        recipeContainer.appendChild(card);
+      });
+    }
+
+    // Function to toggle recipe like
+    function toggleLike(recipeName) {
+      const recipe = recipes.find(recipe => recipe.name === recipeName);
+      if (recipe) {
+        recipe.isLiked = !recipe.isLiked;
+      }
+      // You can add visual changes to the like button here if needed
+    }
+
+    // Initial display of all recipes
+    displayAllRecipes();
+  </script>
+</body>
+</html>
